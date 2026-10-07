@@ -1,5 +1,5 @@
 # 【哔哩哔哩】按键禁用 · Bilibili Key Blocker
-[![version](https://img.shields.io/badge/version-0.1.0-00aeec)](https://github.com/cgy141514/bilibili-key-blocker/releases)
+[![version](https://img.shields.io/badge/version-0.1.1-00aeec)](https://github.com/cgy141514/bilibili-key-blocker/releases)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![userscript](https://img.shields.io/badge/userscript-Tampermonkey%20%7C%20Violentmonkey%20%7C%20ScriptCat-orange)](https://github.com/cgy141514/bilibili-key-blocker)
 [![安装](https://img.shields.io/badge/点击安装-bilibili--key--blocker.user.js-00aeec?logo=javascript)](https://raw.githubusercontent.com/cgy141514/bilibili-key-blocker/main/bilibili-key-blocker.user.js)
@@ -43,6 +43,7 @@ B 站的「快捷键说明」里所有按键都可以被拦下。
 - **一键批量**：面板底部「全部禁用 / 全部启用」，不用一个一个点。
 - **可折叠设置面板**：点标题栏的 `▾ / ▸` 或标题文字即可折叠成一条细栏；`✕` 关闭后随时从脚本菜单唤回。
 - **可拖动 + 记忆位置**：面板停在哪儿、是否折叠，下次打开还在原处。
+- **滚动不穿透**：在面板上滚动不会带动 B 站页面；列表滚到顶 / 底后继续滚动也不会穿透。
 - **三种主题**：跟随系统 / 白天 / 黑夜。选「跟随系统」时，系统切换深浅色会**实时**生效。
 - **输入框安全**：在搜索框、弹幕框、评论区打字不会被拦截（唯一例外是 `Enter`，因为它就是「发弹幕」）。
 - **菜单零打扰**：脚本菜单**只占 1 项**，不会撑爆脚本管理器的弹层。
@@ -162,6 +163,10 @@ bilibili-key-blocker/
 ## 更新日志
 
 完整记录见 [CHANGELOG.md](CHANGELOG.md)。
+
+### v0.1.1 — 2026-10-07
+
+- 修复：面板内滚动到顶部 / 底部后继续滚动会穿透并带动 B 站页面，现在标题栏、按钮区滚动同样不会带动页面
 
 ### v0.1.0 — 2026-10-07
 

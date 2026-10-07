@@ -6,6 +6,14 @@
 
 ## [未发布]
 
+## [0.1.1] - 2026-10-07
+
+### 修复
+
+- 面板内滚动到顶部 / 底部后继续滚动，不再穿透并带动 B 站页面滚动
+  - CSS 加 `overscroll-behavior: contain` 断开滚动链
+  - 额外拦截面板区域内的 `wheel` 事件，标题栏、按钮区等不可滚动区域也不会带动页面
+
 ## [0.1.0] - 2026-10-07
 
 首次发布。
@@ -24,5 +32,6 @@
 
 - 首次发布，无破坏性变更
 
-[未发布]: https://github.com/cgy141514/bilibili-key-blocker/compare/v0.1.0...HEAD
+[未发布]: https://github.com/cgy141514/bilibili-key-blocker/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/cgy141514/bilibili-key-blocker/releases/tag/v0.1.1
 [0.1.0]: https://github.com/cgy141514/bilibili-key-blocker/releases/tag/v0.1.0

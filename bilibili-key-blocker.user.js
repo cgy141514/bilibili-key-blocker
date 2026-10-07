@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         【哔哩哔哩】按键禁用
 // @name:en      Bilibili Key Blocker
-// @version      0.1.0
+// @version      0.1.1
 // @description  按需禁用 B 站播放页快捷键（Q/W/E/R/G、空格、方向键、Esc、F、Enter 等 20 项）；页面内可折叠设置面板，支持白天/黑夜/跟随系统主题
 // @description:en  Block any Bilibili player shortcut you want (Q/W/E/R/G, Space, arrows, Esc, F, Enter … 20 keys) with a collapsible in-page settings panel and light/dark/system themes.
 // @icon         https://static.hdslb.com/images/favicon.ico
@@ -251,7 +251,7 @@
 .sum { color: var(--accent); font-size: 11px; white-space: nowrap; }
 .close { cursor: pointer; color: var(--muted); padding: 0 2px; }
 .close:hover { color: #ff7a7a; }
-.bd { max-height: 380px; overflow: auto; padding: 6px 8px; }
+.bd { max-height: 380px; overflow: auto; overscroll-behavior: contain; padding: 6px 8px; }
 .row { display: grid; grid-template-columns: 16px 104px 1fr; gap: 2px 8px; align-items: start; padding: 4px 6px; border-radius: 6px; cursor: pointer; }
 .row:hover { background: var(--hover); }
 .row input { margin: 3px 0 0; accent-color: var(--accent); cursor: pointer; }
@@ -358,6 +358,24 @@
         tip.textContent =
             "在输入框、弹幕框、评论区里打字不会被拦截（Enter 例外：勾选后弹幕框内也无法发送）。";
         ui.bd.appendChild(tip);
+
+        // ---- 阻止滚动穿透 ----
+        // 指针在面板上滚动时，事件一律不再传给 B 站页面；
+        // 列表滚到顶 / 底之后继续滚动，也不会继续带动页面滚动。
+        // CSS 的 overscroll-behavior: contain 是第一道防线，这里再兜一层，
+        // 顺便覆盖标题栏、按钮区等「不可滚动」的区域。
+        shadow.addEventListener("wheel", (e) => {
+            const path = typeof e.composedPath === "function" ? e.composedPath() : [];
+            const inList = path.indexOf(ui.bd) !== -1;
+            let atEdge = false;
+            if (inList) {
+                const top = ui.bd.scrollTop;
+                const atBottom = top + ui.bd.clientHeight >= ui.bd.scrollHeight - 1;
+                atEdge = (e.deltaY < 0 && top <= 0) || (e.deltaY > 0 && atBottom);
+            }
+            if (!inList || atEdge) e.preventDefault(); // 拦掉浏览器的默认滚动（含滚动链）
+            e.stopPropagation();                       // 不让页面上的监听器收到
+        }, { passive: false });
 
         // ---- 标题栏 ----
         ui.fold.addEventListener("click", (e) => {
