@@ -1,0 +1,11 @@
+# 依赖与构建产物（本项目无构建步骤，留作兜底）
+node_modules/
+dist/
+*.zip
+
+# 编辑器与系统文件
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

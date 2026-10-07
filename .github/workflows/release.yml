@@ -1,0 +1,45 @@
+name: Release
+
+# 打 tag（形如 v0.1.1）时自动创建一个 Release，并把用户脚本作为附件挂上去。
+# 日常往 main 分支提交不会触发本工作流 —— 已安装用户的自动更新走 @updateURL 指向的 main 分支 raw 地址。
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write # 创建 Release 需要写权限
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 校验 tag 与脚本 @version 是否一致
+        run: |
+          set -euo pipefail
+          script="bilibili-key-blocker.user.js"
+          file_ver="$(grep -m1 '^// @version' "$script" | awk '{print $3}' || true)"
+          tag_ver="${GITHUB_REF_NAME#v}"
+          echo "脚本 @version = ${file_ver}"
+          echo "tag          = ${tag_ver}"
+          if [ -z "${file_ver}" ]; then
+            echo "::error::没有在 ${script} 里找到 @version"
+            exit 1
+          fi
+          if [ "${file_ver}" != "${tag_ver}" ]; then
+            echo "::error::${script} 的 @version（${file_ver}）与 tag（${tag_ver}）不一致，请同步后再发版"
+            exit 1
+          fi
+
+      - name: 创建 Release 并附带用户脚本
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          files: bilibili-key-blocker.user.js
+          generate_release_notes: true
+          draft: false
+          prerelease: false
